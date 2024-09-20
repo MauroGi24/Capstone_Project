@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuovo Evento su EventFlow</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .email-header {
+            background-color: #00bfa5;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+        }
+        .email-body {
+            padding: 20px;
+            color: #333333;
+        }
+        .email-body h2 {
+            color: #00bfa5;
+        }
+        .email-body p {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .email-footer {
+            text-align: center;
+            color: #777777;
+            font-size: 14px;
+            padding: 20px;
+            border-top: 1px solid #dddddd;
+        }
+        .email-footer a {
+            color: #00bfa5;
+            text-decoration: none;
+        }
+        .event-details {
+            margin: 20px 0;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-left: 4px solid #00bfa5;
+        }
+        .event-details h3 {
+            margin: 0;
+            color: #333333;
+        }
+        .event-details p {
+            margin: 5px 0;
+            color: #555555;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #00bfa5;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="email-container">
+        <div class="email-header">
+            <h1>EventFlow</h1>
+        </div>
+        <div class="email-body">
+            <h2>Abbiamo inserito un nuovo evento!</h2>
+            <p>Ciao <strong>{{name}}</strong>,</p>
+            <p>È stato appena creato un nuovo evento su <strong>EventFlow</strong></p>
+
+            <div class="event-details">
+                <h3>{{eventTitle}}</h3>
+                <p><strong>Data:</strong> {{eventDate}}</p>
+                <p><strong>Luogo:</strong> {{eventLocation}}</p>
+                <p><strong>Descrizione:</strong> {{eventDescription}}</p>
+            </div>
+
+            <p>Non perdere l'occasione di partecipare. Fai clic sul pulsante qui sotto per saperne di più sull'evento.</p>
+            <p><a href="{{eventUrl}}" class="btn">Dettagli dell'evento</a></p>
+
+            <p>Ci vediamo all'evento!</p>
+            <p>Il team di <strong>EventFlow</strong></p>
+        </div>
+        <div class="email-footer">
+            <p>Se non desideri più ricevere queste email, puoi <a href="{{unsubscribeUrl}}">annullare l'iscrizione</a>.</p>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,7 +1,7 @@
 import User from '../models/userSchema.js'
 import transport from '../services/mail.service.js'
 
-export const users = async (request, response) =>{
+export const allUsers = async (request, response) =>{
     const page = request.query.page
     const perPage = request.query.perPage
     const users = await User.find({}).sort({name: 1, surname: 1}).skip((page - 1) * perPage).limit(perPage)
@@ -34,11 +34,6 @@ export const newUser =  async (request, response) =>{
         })
     } catch (error) {
         response.status(400).send({ message: 'Ricontrolla i dati', error: error.message });
-    }
-    try {
-        const notification = await User.findById(user.user)
-        
-    } catch (error) {
     }
 }
 

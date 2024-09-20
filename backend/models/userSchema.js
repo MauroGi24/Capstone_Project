@@ -44,8 +44,10 @@ const userSchema = new Schema(
           },
         verifiedAt: Date,
         verificationCode: String,
+
     },
-    {collection: "users"}
+    {collection: "users", timestamps: true
+    }
 )
 
 export default model("User", userSchema)
