@@ -6,6 +6,7 @@ import morgan from 'morgan'
 import helmet from 'helmet'
 import userRouter from './routes/user.route.js'
 import eventRouter from './routes/event.route.js'
+import registrationRouter from './routes/registration.route.js'
 
 
 const server = express()    
@@ -23,8 +24,9 @@ server.on('error', (error) => {
     console.error('Server error:', error);
   });
 
-  server.use("/users", userRouter)
-  server.use("/events", eventRouter)
+  server.use("/api/v1/users", userRouter)
+  server.use("/api/v1/events", eventRouter)
+  server.use("/api/v1/registrations", registrationRouter)
   
 server.listen(port, () => {console.log(`Il server è partito alla porta ${port}`)})
 

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Evento cancellato</title>
+    <title>Registrazione Evento su EventFlow</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -81,18 +81,19 @@
             <h1>EventFlow</h1>
         </div>
         <div class="email-body">
-            <h2>Benvenuto su EventFlow</h2>
+            <h2>Registrazione effettuata!</h2>
             <p>Ciao <strong>{{name}}</strong>,</p>
-            <p>Il tuo profilo su <strong>EventFlow</strong> è stato creato</p>
-
+            <p>Ti confermiamo la tua prenotazione a:</p>
             <div class="event-details">
-                <p><strong>Nome:</strong> {{userName}}</p>
-                <p><strong>Cognome:</strong> {{userSurname}}</p>
-                <p><strong>Indirizzo email:</strong> {{userEmail}}</p>
+                <h3>{{eventTitle}}</h3>
+                <p><strong>Data:</strong> {{eventDate}}</p>
+                <p><strong>Luogo:</strong> {{eventLocation}}</p>
             </div>
 
-            <p>Non perdere l'occasione di partecipare ai nostri eventi. Fai clic sul pulsante qui sotto per scoprire le ultime novità.</p>
-            <p><a href="{{eventUrl}}" class="btn">Eventi</a></p>
+            <p>Fai clic sul pulsante qui sotto per saperne di più sull'evento.</p>
+            <p><a href="{{eventUrl}}" class="btn">Dettagli dell'evento</a></p>
+
+            <p>Ci vediamo all'evento!</p>
             <p>Il team di <strong>EventFlow</strong></p>
         </div>
         <div class="email-footer">

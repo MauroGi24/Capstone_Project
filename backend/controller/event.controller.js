@@ -4,7 +4,6 @@ import transport from '../services/mail.service.js'
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url';
-import 'dotenv/config'
  
 
 export const allEvents = async (request, response) =>{
@@ -48,7 +47,6 @@ export const newEvent = async (request, response) => {
                     from: 'noreply@eventflow.com',
                     to: user.email, 
                     subject: "Nuovo Evento su EventFlow", 
-                    text: `Ciao ${user.name}, è stato creato un nuovo evento su EventFlow!`, 
                     html: emailHtml
                 });
             } catch (emailError) {
@@ -66,10 +64,11 @@ export const updateEvent = async (request, response) => {
     const id = request.params.id
     const modifiedEvent = request.body
     try {
+        //mandare la mail all'utente che si è registrato allo specifico evento
         const newEvent = await Event.findByIdAndUpdate(id, { $set: modifiedEvent, new: true });
         response.status(200).send(newEvent);
     } catch (error) {
-        response.status(400).send({ message: `Errore nella modifica dell'utente`, error: error.message });
+        response.status(400).send({ message: `Errore nella modifica dell'evento`, error: error.message });
     }
 }
 
@@ -86,11 +85,12 @@ export const changeCover = async (request, response) => {
 export const deleteEvent = async (request, response) => {
     const id = request.params.id
     try{
+        //mandare la mail allo specifico utente che si è registrato all'evento
         const removeEvent = await Event.findByIdAndDelete(id)
         response.send(removeEvent)
     }
     catch(error) {
-        response.status(400).send({message: `Impossibile rimuovere l'utente`, error: error.message})
+        response.status(400).send({message: `Impossibile rimuovere l'evento`, error: error.message})
     }
 }
 
