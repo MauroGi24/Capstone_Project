@@ -1,5 +1,6 @@
 import Event from '../models/eventSchema.js'
 import User from '../models/userSchema.js'
+import Registration from '../models/registrationSchema.js'
 import transport from '../services/mail.service.js'
 import fs from 'fs'
 import path from 'path'
@@ -34,7 +35,7 @@ export const newEvent = async (request, response) => {
         const dirname = path.dirname(filename);
         const templatePath = path.join(dirname, '../templates/emailNewEvent.html');
         let htmlTemplate = fs.readFileSync(templatePath, 'utf-8'); 
-        users.forEach(async (user) => {
+        for (const user of users) {
             try {
                 let emailHtml = htmlTemplate.replace('{{name}}', user.name)
                 .replace('{{eventTitle}}', event.name)
@@ -52,7 +53,7 @@ export const newEvent = async (request, response) => {
             } catch (emailError) {
                 console.error(`Errore durante l'invio della mail a ${user.email}: ${emailError.message}`);
             }
-        });
+        };
         response.status(201).send(createdEvent);
     } catch (error) {
         response.status(400).send({ message: 'Ricontrolla i dati', error: error.message });
@@ -63,9 +64,38 @@ export const newEvent = async (request, response) => {
 export const updateEvent = async (request, response) => {
     const id = request.params.id
     const modifiedEvent = request.body
-    try {
-        //mandare la mail all'utente che si è registrato allo specifico evento
-        const newEvent = await Event.findByIdAndUpdate(id, { $set: modifiedEvent, new: true });
+    try {        
+        const newEvent = await Event.findByIdAndUpdate(id, { $set: modifiedEvent }, { new: true });
+        console.log(newEvent)
+        const registrations = await Registration.find({ eventId: id });
+        const filename = fileURLToPath(import.meta.url);
+        const dirname = path.dirname(filename);
+        const templatePath = path.join(dirname, '../templates/emailUpdateEvent.html');
+        let htmlTemplate = fs.readFileSync(templatePath, 'utf-8');
+
+        for (const registration of registrations) {
+            const user = await User.findById(registration.userId);
+            if (user) {
+                try {
+                    let emailHtml = htmlTemplate
+                        .replace('{{name}}', user.name)
+                        .replace('{{eventTitle}}', newEvent.name)
+                        .replace('{{eventDate}}', newEvent.date)
+                        .replace('{{eventLocation}}', newEvent.place)
+                        .replace('{{eventDescription}}', newEvent.description)
+                        .replace('{{eventUrl}}', `${process.env.HOST}${process.env.PORT}/events/`)
+                        .replace('{{unsubscribeUrl}}', `${process.env.HOST}${process.env.PORT}/api/v1/users/${user._id}`);
+                    await transport.sendMail({
+                        from: 'noreply@eventflow.com',
+                        to: user.email,
+                        subject: `L'evento ${event.name} è stato aggiornato`,
+                        html: emailHtml
+                    });
+                } catch (emailError) {
+                    console.error(`Errore durante l'invio della mail a ${user.email}: ${emailError.message}`);
+                }
+            }
+        }
         response.status(200).send(newEvent);
     } catch (error) {
         response.status(400).send({ message: `Errore nella modifica dell'evento`, error: error.message });
@@ -83,14 +113,46 @@ export const changeCover = async (request, response) => {
 }
 
 export const deleteEvent = async (request, response) => {
-    const id = request.params.id
-    try{
-        //mandare la mail allo specifico utente che si è registrato all'evento
-        const removeEvent = await Event.findByIdAndDelete(id)
-        response.send(removeEvent)
+    const id = request.params.id;
+    
+    try {
+        const event = await Event.findById(id);
+        const registrations = await Registration.find({ eventId: id });
+        const filename = fileURLToPath(import.meta.url);
+        const dirname = path.dirname(filename);
+        const templatePath = path.join(dirname, '../templates/emailDeleteEvent.html');
+        let htmlTemplate = fs.readFileSync(templatePath, 'utf-8');
+
+        for (const registration of registrations) {
+            const user = await User.findById(registration.userId);
+            if (user) {
+                try {
+                    let emailHtml = htmlTemplate
+                        .replace('{{name}}', user.name)
+                        .replace('{{eventTitle}}', event.name)
+                        .replace('{{eventDate}}', event.date)
+                        .replace('{{eventLocation}}', event.place)
+                        .replace('{{eventDescription}}', event.description)
+                        .replace('{{eventUrl}}', `${process.env.HOST}${process.env.PORT}/events/`)
+                        .replace('{{unsubscribeUrl}}', `${process.env.HOST}${process.env.PORT}/users/${user._id}`);;
+                    await transport.sendMail({
+                        from: 'noreply@eventflow.com',
+                        to: user.email,
+                        subject: `L'evento ${event.name} è stato cancellato`,
+                        html: emailHtml
+                    });
+                } catch (emailError) {
+                    console.error(`Errore durante l'invio della mail a ${user.email}: ${emailError.message}`);
+                }
+            }
+        }
+        const removedEvent = await Event.findByIdAndDelete(id);
+        await Registration.deleteMany({ eventId: id });
+        response.status(200).send(removedEvent);
+
+    } catch (error) {
+        response.status(400).send({ message: `Impossibile rimuovere l'evento`, error: error.message });
     }
-    catch(error) {
-        response.status(400).send({message: `Impossibile rimuovere l'evento`, error: error.message})
-    }
-}
+};
+
 

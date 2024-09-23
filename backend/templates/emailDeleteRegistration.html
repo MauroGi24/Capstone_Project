@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Evento cancellato</title>
+    <title>Registrazione Eliminata</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -82,21 +82,11 @@
         </div>
         <div class="email-body">
             <p>Ciao <strong>{{name}}</strong>,</p>
-            <p>siamo spiacenti, ma l'organizzatore ha cancellato l'evento a cui ti eri registrato</p>
-
-            <div class="event-details">
-                <p><strong>Nome Evento:</strong> {{eventTitle}}</p>
-                <p><strong>Data:</strong> {{eventDate}}</p>
-                <p><strong>Luogo:</strong> {{eventLocation}}</p>
-                <p><strong>Descrizione:</strong> {{eventDescription}}</p>
-            </div>
+            <p>La tua prenotazione a {{eventTitle}} è stata cancellata</p>
 
             <p>Non perdere l'occasione di partecipare ad altri nostri eventi. Fai clic sul pulsante qui sotto per scoprire le ultime novità.</p>
             <p><a href="{{eventUrl}}" class="btn">Eventi</a></p>
             <p>Il team di <strong>EventFlow</strong></p>
-        </div>
-        <div class="email-footer">
-            <p>Se non desideri più ricevere queste email, puoi <a href="{{unsubscribeUrl}}">annullare l'iscrizione</a>.</p>
         </div>
     </div>
 </body>

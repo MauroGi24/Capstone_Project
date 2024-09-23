@@ -6,6 +6,16 @@ import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url';
 
+export const allRegistrations = async (request, response) => {
+    try {
+        const registrations = await Registration.find();
+        response.status(200).send(registrations);
+    } 
+    catch (error) {
+        response.status(500).send({ message: 'Impossibile recuperare le registrazioni', error: error.message });
+    }
+};
+
 export const newRegistration = async (request, response) => {
     try {
         const idUser = request.body.userId 
@@ -44,23 +54,24 @@ export const newRegistration = async (request, response) => {
         response.status(400).send({ message: 'Ricontrolla i dati', error: error.message });
     }
 };
-
 export const deleteRegistration = async (request, response) => {
     const id = request.params.id
     const registration = await Registration.findById(id)
     try {
         const user = await User.findById(registration.userId)
+        const event = await Event.findById(registration.eventId)
         const removeRegistration = await Registration.findByIdAndDelete(id)
         const filename = fileURLToPath(import.meta.url);
         const dirname = path.dirname(filename);
-        const templatePath = path.join(dirname, '../templates/emailDeleteUser.html');
+        const templatePath = path.join(dirname, '../templates/emailDeleteRegistration.html');
         let htmlTemplate = fs.readFileSync(templatePath, 'utf-8'); 
         try{
             let emailHtml = htmlTemplate.replace('{{name}}', user.name)
+                .replace('{{eventTitle}}', event.name)
                 await transport.sendMail({
                     from: 'noreply@eventflow.com',
                     to: user.email, 
-                    subject: `Cancellazione account`, 
+                    subject: `Cancellazione registrazione a ${event.name}`, 
                     html: emailHtml
                 });
         } catch(emailError){ 

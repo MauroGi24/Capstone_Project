@@ -11,6 +11,6 @@ eventRouter.get("/:id", event)
 eventRouter.post("/", uploadImageEvent.single('cover'), newEvent)
 eventRouter.put("/:id", updateEvent)
 eventRouter.delete("/:id", deleteEvent)
-eventRouter.patch("/:id/avatar", uploadImageEvent.single('cover'), changeCover)
+eventRouter.patch("/:id/cover", uploadImageEvent.single('cover'), changeCover)
 
 export default eventRouter
