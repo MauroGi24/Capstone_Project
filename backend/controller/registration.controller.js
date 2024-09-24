@@ -8,7 +8,7 @@ import { fileURLToPath } from 'url';
 
 export const allRegistrations = async (request, response) => {
     try {
-        const registrations = await Registration.find();
+        const registrations = await Registration.find().populate('userId').populate('eventId');
         response.status(200).send(registrations);
     } 
     catch (error) {

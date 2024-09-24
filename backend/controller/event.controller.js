@@ -66,7 +66,6 @@ export const updateEvent = async (request, response) => {
     const modifiedEvent = request.body
     try {        
         const newEvent = await Event.findByIdAndUpdate(id, { $set: modifiedEvent }, { new: true });
-        console.log(newEvent)
         const registrations = await Registration.find({ eventId: id });
         const filename = fileURLToPath(import.meta.url);
         const dirname = path.dirname(filename);

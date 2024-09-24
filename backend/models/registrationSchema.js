@@ -3,11 +3,13 @@ import { Schema, Types, model } from 'mongoose'
 const registrationSchema = new Schema(
     {
         userId: {
-            type: String,
+            type: Types.ObjectId,
+            ref: 'User',
             required: true,
         },
         eventId: {
-            type: String,
+            type: Types.ObjectId,
+            ref: 'Event',
             required: true,
         }
     },

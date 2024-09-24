@@ -33,9 +33,9 @@ const userSchema = new Schema(
         avatar: {
             type: String,
         },
-        comments: {
+        reviews: {
             type: Schema.Types.ObjectId,
-            ref: 'Comment',
+            ref: 'Review',
         },
         role: {
             type: String,

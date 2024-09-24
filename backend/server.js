@@ -7,6 +7,7 @@ import helmet from 'helmet'
 import userRouter from './routes/user.route.js'
 import eventRouter from './routes/event.route.js'
 import registrationRouter from './routes/registration.route.js'
+import reviewRouter from './routes/review.route.js'
 
 
 const server = express()    
@@ -27,6 +28,7 @@ server.on('error', (error) => {
   server.use("/api/v1/users", userRouter)
   server.use("/api/v1/events", eventRouter)
   server.use("/api/v1/registrations", registrationRouter)
+  server.use("/api/v1/reviews", reviewRouter)
   
 server.listen(port, () => {console.log(`Il server è partito alla porta ${port}`)})
 
