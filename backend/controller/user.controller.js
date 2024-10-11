@@ -6,8 +6,6 @@ import { fileURLToPath } from 'url';
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-
-
 export const allUsers = async (request, response) =>{
     const page = request.query.page
     const perPage = request.query.perPage
@@ -69,25 +67,28 @@ export const newUser =  async (request, response) =>{
 }
 
 export const updateUser = async (request, response) => {
-    const id = request.params.id
-    const modifiedUser = request.body
+    const id = request.params.id;
+    const modifiedUser = request.body;
     try {
-        const newUser = await User.findByIdAndUpdate(id, { $set: modifiedUser, new: true });
-        response.status(200).send(newUser);
+        if (modifiedUser.email) {
+            const existingUser = await User.findOne({ email: modifiedUser.email });
+            
+            if (existingUser && existingUser._id.toString() !== id) {
+                return response.status(400).send({ message: 'Email già in uso da un altro utente.' });
+            }
+        }
+        if (request.file && request.file.path) {
+            modifiedUser.avatar = request.file.path; 
+        }  
+        const updatedUser = await User.findByIdAndUpdate(id, { $set: modifiedUser }, { new: true });        
+        if (!updatedUser) {
+            return response.status(404).send({ message: 'Utente non trovato per l\'aggiornamento.' });
+        }
+        response.status(200).send(updatedUser); 
     } catch (error) {
         response.status(400).send({ message: `Errore nella modifica dell'utente`, error: error.message });
     }
-}
-
-export const changeAvatar = async (request, response) => {
-    const id = request.params.id
-    try {
-        const avatarUser = await User.findByIdAndUpdate(id, {avatar: request.file.path}, {new:true})
-        response.status(200).send(avatarUser)
-    } catch (error) {
-        response.status(400).send({message: `Impossibile modificare l'immagine`, error: error.message})
-    }
-}
+};
 
 export const deleteUser = async (request, response) => {
     const id = request.params.id
@@ -140,4 +141,3 @@ export const profile = async(request, response) =>{
     const user = 
     response.send(request.loggedUser)
 }
-

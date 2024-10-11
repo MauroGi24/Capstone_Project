@@ -18,16 +18,11 @@ export default function LoginContextProvider({children}) {
            } 
         }      
     }
-    const logout = () => {
-        localStorage.removeItem('token');  
-        setToken(null);  
-        setUserInfo(null);  
-    };
-
     useEffect(()=>{
         if (token) getProfile() 
     },[token])
-    const value = {token, setToken, userInfo, setUserInfo, logout}
+    
+    const value = {token, setToken, userInfo, setUserInfo, getProfile}
     return (
         <LoginContext.Provider value={value}>{children}</LoginContext.Provider>
     )

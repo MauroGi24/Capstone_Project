@@ -60,12 +60,19 @@ export const newEvent = async (request, response) => {
     }
 };
 
-
 export const updateEvent = async (request, response) => {
-    const id = request.params.id
-    const modifiedEvent = request.body
-    try {        
-        const newEvent = await Event.findByIdAndUpdate(id, { $set: modifiedEvent }, { new: true });
+    const id = request.params.id;
+    const modifiedEvent = request.body;
+
+    try {
+        // Se c'è un file (immagine della cover), aggiorna il campo cover con il percorso dell'immagine
+        if (request.file && request.file.path) {
+            modifiedEvent.cover = request.file.path; // Path restituito da Cloudinary
+        }
+        const newEvent = await Event.findByIdAndUpdate(id, { $set: modifiedEvent }, { new: true });       
+        if (!newEvent) {
+            return response.status(404).send({ message: 'Evento non trovato per l\'aggiornamento.' });
+        }
         const registrations = await Registration.find({ eventId: id });
         const filename = fileURLToPath(import.meta.url);
         const dirname = path.dirname(filename);

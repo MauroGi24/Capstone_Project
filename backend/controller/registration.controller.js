@@ -16,6 +16,26 @@ export const allRegistrations = async (request, response) => {
     }
 };
 
+export const userRegistrations = async (request, response) => {
+    const userId = request.params.id;
+    try {
+      const user = await User.findById(userId);
+      if (!user) {
+        return response.status(404).json({ message: 'Utente non trovato' });
+      }  
+      const registrations = await Registration.find({ userId: userId }).populate('eventId').populate('userId'); 
+  
+      if (registrations.length === 0) {
+        return response.status(404).json({ message: 'Nessuna prenotazione trovata per questo utente' });
+      }  
+      response.status(200).json(registrations);
+    } catch (error) {
+      console.error(error);
+      response.status(500).json({ message: 'Errore durante il recupero della prenotazione', error: error.message });
+    }
+  };
+  
+
 export const newRegistration = async (request, response) => {
     try {
         const idUser = request.body.userId 
@@ -54,6 +74,39 @@ export const newRegistration = async (request, response) => {
         response.status(400).send({ message: 'Ricontrolla i dati', error: error.message });
     }
 };
+
+export const updateRegistration = async (request, response) => {
+    const id = request.params.id
+    const { userName, userEmail} = request.body;
+    try {
+        const registration = await Registration.findById(id).populate('userId'); 
+
+        if (!registration) {
+          return response.status(404).send({ message: 'Registrazione non trovata' });
+        }
+    
+        if (userName || userEmail) {
+          const updatedUser = await User.findByIdAndUpdate(
+            registration.userId._id, 
+            {
+              ...(userName && { name: userName }),  
+              ...(userEmail && { email: userEmail }),  
+            },
+            { new: true, runValidators: true } 
+          );
+    
+          if (!updatedUser) {
+            return response.status(404).send({ message: 'Utente non trovato' });
+          }
+        }    
+        response.status(200).send({ message: 'Utente aggiornato con successo' });
+      } catch (error) {
+        response
+          .status(400)
+          .send({ message: 'Errore durante l\'aggiornamento dell\'utente', error: error.message });
+      }
+    };
+
 export const deleteRegistration = async (request, response) => {
     const id = request.params.id
     const registration = await Registration.findById(id)

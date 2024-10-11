@@ -18,7 +18,7 @@ const eventSchema = new Schema(
             type: String,
             required: true,
         },
-        tag: {
+        category: {
             type: String,
             required: true,
             trim: true,

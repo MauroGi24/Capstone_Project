@@ -1,0 +1,14 @@
+flex-tabs .nav-tabs {
+    display: flex;
+    justify-content: space-around;
+  }
+  
+  .flex-tabs .nav-item {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .flex-tabs .tab-content {
+    padding-top: 20px;
+  }
+  

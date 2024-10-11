@@ -1,8 +1,6 @@
 import express from 'express'
 import {newReview, review, updateReview, deleteReview} from '../controller/review.controller.js'
 
-
-
 const reviewRouter= express.Router()
 
 // reviewRouter.get("/", allReviews)

@@ -2,7 +2,6 @@ import Review from '../models/reviewSchema.js'
  
 
 export const newReview = async (request, response) => {
-    //passare anche id user dal jwt
     try {
         const review = new Review({...request.body, event: request.params.eventId});
         const createdReview = await review.save();
