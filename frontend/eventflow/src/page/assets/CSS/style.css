@@ -29,6 +29,10 @@ a {
     border-radius: 5px;
 }
 
+.button-modal-login {
+    background-color: #19d2df ;
+}
+
 
 /* Navbar Styling */
 .sticky-top {
@@ -135,7 +139,6 @@ a {
   
   .modal-header .modal-title {
     font-weight: bold;
-    color: #19d2df;
   }
   
   .modal-body {
@@ -162,7 +165,7 @@ a {
     padding: 12px;
     border-radius: 8px;
     font-size: 16px;
-    background-color: #19d2df; 
+    /* background-color: #19d2df;  */
     border: none;
     color: white;
     transition: background-color 0.3s ease;

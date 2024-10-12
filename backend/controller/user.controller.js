@@ -49,7 +49,7 @@ export const newUser =  async (request, response) =>{
                 .replace('{{userName}}', user.name)
                 .replace('{{userSurname}}', user.surname)
                 .replace('{{userEmail}}', user.email)
-                .replace('{{eventUrl}}', `${process.env.HOST}${process.env.PORT}/api/v1/events`)
+                .replace('{{eventUrl}}', `${process.env.HOST}3000`)
                 .replace('{{unsubscribeUrl}}', `${process.env.HOST}${process.env.PORT}/api/v1/users/${user._id}`);
                 await transport.sendMail({
                     from: 'noreply@eventflow.com',

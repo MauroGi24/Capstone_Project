@@ -28,7 +28,7 @@ function Home() {
       </div>
 
       <div className="row-section">
-        <h2 className="section-title">Arte</h2>
+        <h2 className="section-title">Concerti</h2>
         <div className="row">
           <CardEvent events={eventList} />
         </div>

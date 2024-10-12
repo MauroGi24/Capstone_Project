@@ -1,16 +1,23 @@
 import { useState, useContext } from "react";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
-import Form from "react-bootstrap/Form";
-import { Container, Row, Col, Alert } from "react-bootstrap";
+import { Container, Row, Col, Alert, Button, Modal, Form } from "react-bootstrap";
 import { LoginContext } from "../../context/LoginContext";
-import { login } from "../../data/fetch";
+import { login, registerUser } from "../../data/fetch";
+
 
 function ModalLogin() {
-  const {token, setToken } = useContext(LoginContext);
+  const { token, setToken } = useContext(LoginContext);
   const [formValue, setFormValue] = useState({ email: "", password: "" });
+  const [registerFormValue, setRegisterFormValue] = useState({
+    name: "",
+    surname: "",
+    email: "",
+    password: "",
+    birthDate: "",
+    profileImage: null,
+  });
   const [errorMessage, setErrorMessage] = useState("");
   const [showAlert, setShowAlert] = useState(false);
+  const [loading, setLoading] = useState(false)
   const [fullscreen, setFullscreen] = useState(true);
   const [show, setShow] = useState(false);
 
@@ -23,6 +30,21 @@ function ModalLogin() {
     setFormValue({
       ...formValue,
       [event.target.name]: event.target.value,
+    });
+  };
+
+  const handleRegisterChange = (event) => {
+    const { name, value } = event.target;
+    setRegisterFormValue({
+      ...registerFormValue,
+      [name]: value 
+    });
+  };
+
+  const handleFileChange = (e) => {
+    setRegisterFormValue({
+      ...registerFormValue,
+      profileImage: e.target.files[0], 
     });
   };
 
@@ -50,6 +72,39 @@ function ModalLogin() {
     }
   };
 
+  const handleRegister = async () => {
+    if (!registerFormValue.name || !registerFormValue.surname || !registerFormValue.email || !registerFormValue.password || !registerFormValue.birthDate) {
+      setErrorMessage("Per favore, compila tutti i campi richiesti.");
+      setShowAlert(true);
+      return;
+    }
+    setLoading(true)
+    const formData = new FormData();
+    formData.append("name", registerFormValue.name);
+    formData.append("surname", registerFormValue.surname);
+    formData.append("email", registerFormValue.email);
+    formData.append("password", registerFormValue.password);
+    formData.append("birthDate", registerFormValue.birthDate);
+    if (registerFormValue.profileImage) {
+      formData.append("avatar", registerFormValue.avatar);
+    }
+
+    try {
+      const result = await registerUser(formData);
+      if (result) {
+        setShow(false);
+        setLoading(false)
+        setShowAlert(false);
+        // Fare il login automatico dopo la registrazione
+        setToken(result.token); 
+        localStorage.setItem("token", result.token);
+      }
+    } catch (error) {
+      setErrorMessage(error.message || "Errore durante la registrazione.");
+      setShowAlert(true);
+    }
+  };
+
   return (
     <>
       {!token && (
@@ -67,13 +122,11 @@ function ModalLogin() {
       )}
       <Modal show={show} fullscreen={fullscreen} onHide={() => setShow(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Login</Modal.Title>
+          <Modal.Title>Login / Registrazione</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Container>
-            <Row className="justify-content-md-center">
-              <Col xs lg="4">
-                {showAlert && (
+          {showAlert && (
                   <Alert
                     variant="danger"
                     onClose={() => setShowAlert(false)}
@@ -82,6 +135,9 @@ function ModalLogin() {
                     {errorMessage}
                   </Alert>
                 )}
+            <Row className="justify-content-md-center">
+              <Col xs={12} md={6}>
+                <h4>Login</h4>
                 <Form>
                   <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label>Email</Form.Label>
@@ -103,8 +159,79 @@ function ModalLogin() {
                     />
                   </Form.Group>
 
-                  <Button variant="primary" onClick={handleLogin} type="button">
+                  <Button className="button-modal-login" variant="primary" onClick={handleLogin} type="button">
                     Accedi
+                  </Button>
+                </Form>
+              </Col>
+              <Col xs={12} md={6}>
+                <h4>Registrazione</h4>
+                <Form>
+                
+                  <Form.Group className="mb-3">
+                    <Form.Label>Nome</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="name"
+                      placeholder="Inserisci il tuo nome"
+                      onChange={handleRegisterChange}
+                    />
+                  </Form.Group>
+
+                  <Form.Group className="mb-3">
+                    <Form.Label>Cognome</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="surname"
+                      placeholder="Inserisci il tuo cognome"
+                      onChange={handleRegisterChange}
+                    />
+                  </Form.Group>
+
+                  <Form.Group className="mb-3">
+                    <Form.Label>Email</Form.Label>
+                    <Form.Control
+                      type="email"
+                      name="email"
+                      placeholder="Inserisci la tua email"
+                      onChange={handleRegisterChange}
+                    />
+                  </Form.Group>
+
+                  <Form.Group className="mb-3">
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control
+                      type="password"
+                      name="password"
+                      placeholder="Inserisci la tua password"
+                      onChange={handleRegisterChange}
+                    />
+                  </Form.Group>
+
+                  <Form.Group className="mb-3">
+                    <Form.Label>Data di nascita</Form.Label>
+                    <Form.Control
+                      type="date"
+                      name="birthDate"
+                      onChange={handleRegisterChange}
+                    />
+                  </Form.Group>
+
+                  <Form.Group className="mb-3">
+                    <Form.Label>Immagine del profilo</Form.Label>
+                    <Form.Control
+                      type="file"
+                      name="avatar"
+                      onChange={handleFileChange}
+                    />
+                  </Form.Group>
+
+                  <Button className="button-modal-login"
+                    variant="success"
+                    onClick={handleRegister}
+                    type="button"
+                  >
+                    Registrati
                   </Button>
                 </Form>
               </Col>

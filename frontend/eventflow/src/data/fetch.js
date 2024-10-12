@@ -34,6 +34,29 @@ export const profile = async() =>{
     return data
 }
 
+//Fetch per creare il profilo
+
+export const registerUser = async (formData) => {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/v1/users/`, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Errore nella registrazione");
+    }
+
+    const data = await response.json();
+    return data; 
+  } catch (error) {
+    console.error("Errore durante la registrazione:", error);
+    throw error; 
+  }
+};
+
+
 //Fetch per modificare il profilo
 
 export const updateUser = async(updatedUserData, id) => {
