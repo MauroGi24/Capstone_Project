@@ -9,7 +9,7 @@ function CardEvent({ events }) {
       <Row className="g-4">
         {events.map((event) => (
           <Col key={event._id} xs={12} md={6} lg={4} xl={3} className="card-wrapper">
-            <Card as={Link} to={`/event-details/${event._id}`} className="event-card h-100 shadow">
+            <Card as={Link} to={`/event/${event._id}`} className="event-card h-100 shadow">
               <div className="card-img-container">
                 <Card.Img
                   data-testid='card-img'

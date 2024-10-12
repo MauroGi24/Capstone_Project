@@ -41,24 +41,10 @@
     border-bottom-right-radius: 12px;
   }
   
-  .animated-button {
-    background-color: #19d2df;
-    color: #fff;
-    border: none;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    font-weight: bold;
-  }
-  
-  .animated-button:hover {
-    background-color: #17b9c6;
-    transform: scale(1.05);
-  }
-  
   .event-card, .card-body, .card-img-container {
     transition: all 0.3s ease;
   }
-
-  
+    
   .row {
     justify-content: center;
   }

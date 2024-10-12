@@ -1,3 +1,5 @@
+import EventDetails from "../components/Events/EventsDetails";
+
 //Fetch Login
 export const login = async (formValue) => {
     try {
@@ -113,6 +115,21 @@ export const events = async () =>{
     }
     const data = await res.json();
     return data
+}
+
+//Fetch per recuperare uno specifico evento
+
+export const eventDetail = async (id) => {
+  const res = await fetch(`${process.env.REACT_APP_BASE_URL}/api/v1/events/${id}`,{
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  if(!res.ok){
+      throw new Error(res.status)
+}
+  const data = await res.json();
+  return data
 }
 
 //Fetch per creare evento

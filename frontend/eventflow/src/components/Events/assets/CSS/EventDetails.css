@@ -1,0 +1,41 @@
+.event-details-container {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .event-cover-image {
+    border-radius: 10px;
+    max-height: 400px;
+    object-fit: cover;
+    width: 100%;
+  }
+  
+  .event-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .event-date, .event-place, .event-category {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+  
+  .event-description {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  
+  button {
+    font-size: 1.2rem;
+    background-color: #19d2df;
+    border: none;
+    padding: 10px 20px;
+  }
+  
+  button:hover {
+    background-color: #0aa6b3;
+  }
+  
